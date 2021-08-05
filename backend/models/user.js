@@ -1,5 +1,5 @@
-const { Sequelize } = require('sequelize');
-const sequelize = new Sequelize('groupomania', 'root', 'root', {
+const { Sequelize , DataTypes} = require('sequelize');
+const sequelize = new Sequelize('groupomaniio', 'root', 'root', {
     host: 'localhost',
     dialect: 'mysql'
 });
@@ -7,17 +7,34 @@ const sequelize = new Sequelize('groupomania', 'root', 'root', {
 
 const User = sequelize.define('User', {
     // Model attributes are defined here
-    firstName: {
+    pseudo: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    lastName: {
-        type: DataTypes.STRING
-        // allowNull defaults to true
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    password: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    moderator: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: 0
+    },
+    img_url: {
+        type: DataTypes.STRING,
+    },
+    biography: {
+        type: DataTypes.TEXT,
     }
 }, {
     // Other model options go here
 });
+
+
 
 // `sequelize.define` also returns the model
 console.log(User === sequelize.models.User); // true
