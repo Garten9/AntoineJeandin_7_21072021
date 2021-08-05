@@ -1,10 +1,9 @@
 const express = require('express');
 const user = require('./models/user');
-// const bodyParser = require('body-parser');
-// const Sauce = require('./models/sauce');
-// const Utilisateur = require('./models/utilisateur');
+const post = require('./models/post');
+const comment = require('./models/comment');
 // const sauceRoutes = require('./routes/sauces');
-// const utilisateurRoutes = require('./routes/utilisateur');
+const userRoutes = require('./routes/user');
 // const path = require('path');
 // const helmet = require('helmet');
 
@@ -28,17 +27,17 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use(bodyParser.json());
+
 // permet d'extraire les données json
 app.use(express.json());
 
-app.use((req, res) => {
-    res.json({ message: 'Votre requête a bien été reçue !' }); 
- });
+// app.use((req, res) => {
+//     res.json({ message: 'Votre requête a bien été reçue !' }); 
+//  });
 
 // app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // app.use('/api/sauces', sauceRoutes);
-// app.use('/api/auth', utilisateurRoutes);
+app.use('/api/auth', userRoutes);
 
 module.exports = app;
