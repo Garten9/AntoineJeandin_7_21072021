@@ -4,6 +4,8 @@ const post = require('./models/post');
 const comment = require('./models/comment');
 // const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
+const postRoutes = require('./routes/post');
+
 // const path = require('path');
 // const helmet = require('helmet');
 
@@ -39,5 +41,6 @@ app.use(express.json());
 
 // app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
+app.use('/api/posts', postRoutes);
 
 module.exports = app;

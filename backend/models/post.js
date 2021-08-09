@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes, Deferrable } = require('sequelize');
-const sequelize = new Sequelize('groupomaniio', 'root', 'root', {
+const sequelize = new Sequelize('groupomania', 'root', 'root', {
     host: 'localhost',
     dialect: 'mysql'
 });

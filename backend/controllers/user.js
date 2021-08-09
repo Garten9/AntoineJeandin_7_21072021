@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 // const utilisateur = require('../models/utilisateur');
 const jwt = require('jsonwebtoken');
 const { Sequelize } = require('sequelize');
-const sequelize = new Sequelize('groupomaniio', 'root', 'root', {
+const sequelize = new Sequelize('groupomania', 'root', 'root', {
     host: 'localhost',
     dialect: 'mysql'
 });
@@ -21,7 +21,6 @@ function escapeHtml(text) {
 }
 
 exports.signup = (req, res, next) => {
-    console.log(req.body);
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
             const utilisateur = Utilisateur.create({
@@ -29,7 +28,14 @@ exports.signup = (req, res, next) => {
                 pseudo: req.body.pseudo,
                 password: hash
             })
-                .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+                .then(() => res.status(201).json({
+                    userId: utilisateur.id,
+                    token: jwt.sign(
+                        { userId: utilisateur.id },
+                        'RANDOM_TOKEN_SECRET',
+                        { expiresIn: '24h' }
+                    ) 
+                }))
                 .catch(error => res.status(400).json({ error }));
         })
         .catch(error => {

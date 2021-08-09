@@ -1,5 +1,5 @@
 const { Sequelize , DataTypes} = require('sequelize');
-const sequelize = new Sequelize('groupomaniio', 'root', 'root', {
+const sequelize = new Sequelize('groupomania', 'root', 'root', {
     host: 'localhost',
     dialect: 'mysql'
 });
@@ -13,7 +13,8 @@ const User = sequelize.define('User', {
     },
     email: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     password: {
         type: DataTypes.TEXT,
@@ -34,6 +35,7 @@ const User = sequelize.define('User', {
     // Other model options go here
 });
 
+// User.sync({ alter: true });
 
 module.exports = sequelize.model('User');
 // `sequelize.define` also returns the model
