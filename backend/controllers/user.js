@@ -1,6 +1,5 @@
 const Utilisateur = require('../models/user');
 const bcrypt = require('bcrypt');
-// const utilisateur = require('../models/utilisateur');
 const jwt = require('jsonwebtoken');
 const { Sequelize } = require('sequelize');
 const sequelize = new Sequelize('groupomania', 'root', 'root', {
@@ -23,15 +22,15 @@ function escapeHtml(text) {
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
-            const utilisateur = Utilisateur.create({
+            Utilisateur.create({
                 email: req.body.email,
                 pseudo: req.body.pseudo,
                 password: hash
             })
-                .then(() => res.status(201).json({
-                    userId: utilisateur.id,
+                .then((user) => res.status(201).json({
+                    userId: user.id,
                     token: jwt.sign(
-                        { userId: utilisateur.id },
+                        { userId: user.id },
                         'RANDOM_TOKEN_SECRET',
                         { expiresIn: '24h' }
                     )
@@ -57,6 +56,7 @@ exports.login = (req, res, next) => {
                     }
                     res.status(200).json({
                         userId: utilisateur.id,
+                        moderator: utilisateur.moderator,
                         token: jwt.sign(
                             { userId: utilisateur.id },
                             'RANDOM_TOKEN_SECRET',
@@ -67,6 +67,17 @@ exports.login = (req, res, next) => {
                 .catch(error => res.status(500).json({ error }));
         })
         .catch(error => res.status(500).json({ error }));
+};
+
+exports.getAllUser = (req, res, next) => {
+    Utilisateur.findAll({
+        order: [
+            ['createdAt', 'DESC']
+        ],
+    })
+        .then(users => res.status(200).json(users))
+        .catch(error => res.status(400).json({ error }));
+
 };
 
 exports.getOneUser = (req, res, next) => {

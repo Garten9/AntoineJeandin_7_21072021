@@ -113,6 +113,7 @@ export default {
           .then(function (response) {
             sessionStorage.setItem("token", response.data.token);
             sessionStorage.setItem("userId", response.data.userId);
+            sessionStorage.setItem("moderator", "false");
 
             window.location = "http://localhost:8080/#/accueil";
           })

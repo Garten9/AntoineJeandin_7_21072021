@@ -5,11 +5,11 @@
         <p class="text-primary text-start">{{ pseudoDate }}</p>
         <p class="text-start">{{ postData.message }}</p>
         <div
-          v-if="postData.user_id == userId"
+          v-if="postData.user_id == userId || $store.state.moderator == true"
           class="position-absolute m-2"
           style="top: 0px; right: 0px"
         >
-          <img src="../assets/modify.png" alt="icon modify" width="25" />
+          <img src="../assets/modify.png" alt="icon modify" width="25" v-if="postData.user_id == userId"/>
           <img
             src="../assets/delete.png"
             alt="icon delete"

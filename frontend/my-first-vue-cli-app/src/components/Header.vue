@@ -42,6 +42,11 @@
                   >Accueil</router-link
                 >
               </li>
+              <li v-if="$store.state.moderator == true" class="nav-item active">
+                <router-link to="/moderator" class="nav-link"
+                  >Moderation</router-link
+                >
+              </li>
               <li class="nav-item">
                 <router-link to="/compte" class="nav-link"
                   >Mon Compte</router-link
@@ -65,6 +70,7 @@ export default {
     logOut() {
       sessionStorage.clear();
       this.$store.commit('LOG_OUT');
+      this.$store.commit('MODERATOR_OFF');
       window.location = "http://localhost:8080/#/";
     },
   },

@@ -82,6 +82,7 @@ export default {
           .then(function (response) {
             sessionStorage.setItem("token", response.data.token);
             sessionStorage.setItem("userId", response.data.userId);
+            sessionStorage.setItem("moderator", response.data.moderator);
 
             window.location = "http://localhost:8080/#/accueil";
           })
@@ -91,7 +92,6 @@ export default {
             } else {
               alert("Une erreur est survenue");
             }
-            console.log(error);
           });
       }
     },

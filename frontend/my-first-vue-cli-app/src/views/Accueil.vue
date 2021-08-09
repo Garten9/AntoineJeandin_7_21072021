@@ -32,7 +32,12 @@
         </form>
       </div>
     </div>
-    <Post v-for="post in posts" :key="post.id" :postData="post" :comments="comments"/>
+    <Post
+      v-for="post in posts"
+      :key="post.id"
+      :postData="post"
+      :comments="comments"
+    />
     <div></div>
   </div>
 </template>
@@ -74,9 +79,16 @@ export default {
   beforeCreate() {
     if (sessionStorage.getItem("token") == null) {
       this.$store.commit("LOG_OUT");
+
       window.location = "http://localhost:8080/";
     } else {
       this.$store.commit("LOG_IN");
+      if (sessionStorage.getItem("moderator") == "true") {
+        console.log("moderation");
+        this.$store.commit("MODERATOR_ON");
+      } else {
+        console.log("pas moderation");
+      }
     }
   },
   beforeMount() {
