@@ -1,7 +1,7 @@
 <template>
   <div class="Accueil container-fluid">
-    <div class="row">
-      <div class="col-10 mx-auto mt-3 p-2 rounded-3 bg-white position-relative">
+    <div class="row px-2">
+      <div class="col mx-auto mt-3 p-2 rounded-3 bg-white position-relative">
         <form>
           <textarea
             class="form-control"
@@ -32,7 +32,7 @@
         </form>
       </div>
     </div>
-    <Post v-for="post in posts" :key="post.id" :postData="post" />
+    <Post v-for="post in posts" :key="post.id" :postData="post" :comments="comments"/>
     <div></div>
   </div>
 </template>
@@ -46,6 +46,7 @@ export default {
   data() {
     return {
       posts: [],
+      comments: [],
       postMessage: "",
       userId: sessionStorage.getItem("userId"),
     };
@@ -85,7 +86,16 @@ export default {
       })
       .then((response) => (this.posts = response.data))
       .catch(function (error) {
-        console.log(error.response.data);
+        console.log(error);
+        alert("Une erreur est survenue");
+      });
+    axios
+      .get("http://localhost:3000/api/comments/", {
+        headers: { Authorization: "Bearer " + sessionStorage.getItem("token") },
+      })
+      .then((response) => (this.comments = response.data))
+      .catch(function (error) {
+        console.log(error);
         alert("Une erreur est survenue");
       });
   },

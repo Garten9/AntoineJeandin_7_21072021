@@ -1,7 +1,7 @@
 <template>
-  <div class="post container-fluid">
+  <!-- <div class="post container-fluid">
     <div class="row">
-      <div class="col mx-auto mt-3 p-2 rounded-3 bg-white position-relative">
+      <div class="col-10 mx-auto mt-3 rounded-3 bg-white position-relative">
         <p class="text-primary text-start">{{ pseudoDate }}</p>
         <p class="text-start">{{ postData.message }}</p>
         <div
@@ -41,36 +41,40 @@
           </form>
         </div>
         <div>
-          <div v-for="comment in comments" :key="comment.id">
-            <Comment v-if="comment.post_id == postData.id" :commentData="comment" />
-          </div>
+          <Comment
+            v-for="comment in comments"
+            :key="comment.id"
+            :commentData="comment"
+            :postId="postData.id"
+          />
         </div>
       </div>
     </div>
+  </div> -->
+  <div class="text-start rounded-3 bg-gray my-2 p-2">
+    <div class="text-primary">{{ pseudoDateComment }}</div>
+    <div>{{ commentData.message }}</div>
   </div>
 </template>
 
 <script>
 const axios = require("axios");
-import Comment from "@/components/Comment.vue";
 
 export default {
-  components: { Comment },
-  name: "Post",
+  name: "Comment",
   data() {
     return {
       pseudo: "",
       userId: sessionStorage.getItem("userId"),
-      commentMessage: "",
     };
   },
   props: {
-    postData: Object,
-    comments: Object,
+    commentData: Object,
+    // postId: Number,
   },
   computed: {
-    pseudoDate() {
-      const datePost = this.postData.createdAt.split("T");
+    pseudoDateComment() {
+      const datePost = this.commentData.createdAt.split("T");
       const date = datePost[0].split("-");
       const heure = datePost[1].split(":");
 
@@ -89,43 +93,9 @@ export default {
       );
     },
   },
-  methods: {
-    deletePost() {
-      axios
-        .delete("http://localhost:3000/api/posts/" + this.postData.id, {
-          headers: {
-            Authorization: "Bearer " + sessionStorage.getItem("token"),
-          },
-        })
-        .then(() => window.location.reload())
-        .catch(function (error) {
-          console.log(error.response);
-          alert("Une erreur est survenue");
-        });
-    },
-    addComment() {
-      axios({
-        method: "post",
-        url: "http://localhost:3000/api/comments/",
-        data: {
-          message: this.commentMessage,
-          userId: this.userId,
-          postId: this.postData.id,
-        },
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      })
-        .then(() => window.location.reload())
-        .catch(function (error) {
-          console.log(error);
-          alert("Une erreur est survenue");
-        });
-    },
-  },
   beforeMount() {
     axios
-      .get("http://localhost:3000/api/auth/" + this.postData.user_id, {
+      .get("http://localhost:3000/api/auth/" + this.commentData.user_id, {
         headers: { Authorization: "Bearer " + sessionStorage.getItem("token") },
       })
       .then((response) => (this.pseudo = response.data.pseudo))
@@ -136,5 +106,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.bg-gray {
+  background-color: #E8E8E8;
+}
+</style>
 
 

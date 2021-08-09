@@ -15,6 +15,7 @@ const Post = sequelize.define('Post', {
     },
     user_id: {
         type: DataTypes.INTEGER,
+        onDelete: 'CASCADE',
 
         references: {
             // This is a reference to another model

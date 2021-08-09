@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes, Deferrable } = require('sequelize');
 const sequelize = new Sequelize('groupomania', 'root', 'root', {
     host: 'localhost',
-    dialect: 'mysql'
+    dialect: 'mysql',
 });
 
 const Comment = sequelize.define('Comment', {
@@ -12,11 +12,12 @@ const Comment = sequelize.define('Comment', {
     },
     user_id: {
         type: DataTypes.INTEGER,
+        onDelete: 'CASCADE',
+
 
         references: {
             // This is a reference to another model
             model: 'users',
-
             // This is the column name of the referenced model
             key: 'id',
 
@@ -30,6 +31,7 @@ const Comment = sequelize.define('Comment', {
     },
     post_id: {
         type: DataTypes.INTEGER,
+        onDelete: 'CASCADE',
 
         references: {
             // This is a reference to another model

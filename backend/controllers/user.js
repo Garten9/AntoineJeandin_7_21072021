@@ -34,7 +34,7 @@ exports.signup = (req, res, next) => {
                         { userId: utilisateur.id },
                         'RANDOM_TOKEN_SECRET',
                         { expiresIn: '24h' }
-                    ) 
+                    )
                 }))
                 .catch(error => res.status(400).json({ error }));
         })
@@ -70,7 +70,19 @@ exports.login = (req, res, next) => {
 };
 
 exports.getOneUser = (req, res, next) => {
-    Utilisateur.findOne({ where: {id: req.params.id }})
-      .then(user => res.status(200).json(user))
-      .catch(error => res.status(404).json({ error }));
-  };
+    Utilisateur.findOne({ where: { id: req.params.id } })
+        .then(user => res.status(200).json(user))
+        .catch(error => res.status(404).json({ error }));
+};
+
+exports.deleteUser = (req, res, next) => {
+    Utilisateur.destroy({ where: { id: req.params.id } })
+        .then(() => res.status(200).json({ message: 'user supprimé !' }))
+        .catch(error => res.status(400).json({ error }));
+};
+
+exports.modifyUser = (req, res, next) => {
+    Utilisateur.update({ biography: req.body.biography }, { where: { id: req.params.id } })
+        .then(() => res.status(200).json({ message: 'user modifié !' }))
+        .catch(error => res.status(400).json({ error }));
+};
