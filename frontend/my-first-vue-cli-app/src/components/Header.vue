@@ -24,7 +24,7 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarContent">
             <ul
-              v-if="logged == null"
+              v-if="$store.state.logged == false"
               class="navbar-nav"
             >
               <li class="nav-item active">
@@ -48,9 +48,8 @@
                 >
               </li>
               <li class="nav-item">
-                <div class="nav-link" @click="logOut()">Déconnexion</div>
+                <a href="" class="nav-link" @click="logOut()">Déconnexion</a>
               </li>
-              <li>{{ logged }}</li>
             </ul>
           </div>
         </nav>
@@ -62,15 +61,10 @@
 <script>
 export default {
   name: "Header",
-  data() {
-    return {
-      logged: sessionStorage.getItem('token'),
-    };
-  },
   methods: {
     logOut() {
       sessionStorage.clear();
-      this.logged = null;
+      this.$store.commit('LOG_OUT');
       window.location = "http://localhost:8080/#/";
     },
   },

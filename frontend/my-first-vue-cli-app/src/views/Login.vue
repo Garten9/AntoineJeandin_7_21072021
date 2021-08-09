@@ -86,7 +86,7 @@ export default {
             window.location = "http://localhost:8080/#/accueil";
           })
           .catch(function (error) {
-            if (error.response.status == 401) {
+            if (error.response && error.response.status == 401) {
               alert("Email ou Mot de passe invalide");
             } else {
               alert("Une erreur est survenue");

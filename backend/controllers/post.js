@@ -1,4 +1,5 @@
 const Post = require('../models/post');
+const User = require('../models/user');
 const fs = require('fs');
 
 const { Sequelize } = require('sequelize');
@@ -28,12 +29,13 @@ exports.getOnePost = (req, res, next) => {
 
 exports.getAllPosts = (req, res, next) => {
     Post.findAll({
-        order : [
+        order: [
             ['createdAt', 'DESC']
-        ]
+        ],
     })
         .then(posts => res.status(200).json(posts))
         .catch(error => res.status(400).json({ error }));
+
 };
 
 exports.createPost = (req, res, next) => {
@@ -84,15 +86,19 @@ exports.modifyPost = (req, res, next) => {
 };
 
 exports.deletePost = (req, res, next) => {
-    Sauce.findOne({ _id: escapeHtml(req.params.id) })
-        .then(sauce => {
-            const filename = sauce.imageUrl.split('/images/')[1];
-            fs.unlink(`images/${filename}`, () => {
-                Sauce.deleteOne({ _id: req.params.id })
-                    .then(() => res.status(200).json({ message: 'Sauce supprimé !' }))
-                    .catch(error => res.status(400).json({ error }));
-            });
-        })
-        .catch(error => res.status(500).json({ error }));
+    // Sauce.findOne({ _id: escapeHtml(req.params.id) })
+    //     .then(sauce => {
+    //         const filename = sauce.imageUrl.split('/images/')[1];
+    //         fs.unlink(`images/${filename}`, () => {
+    //             Sauce.deleteOne({ _id: req.params.id })
+    //                 .then(() => res.status(200).json({ message: 'Sauce supprimé !' }))
+    //                 .catch(error => res.status(400).json({ error }));
+    //         });
+    //     })
+    //     .catch(error => res.status(500).json({ error }));
+    Post.destroy({ where: { id: req.params.id } })
+        .then(() => res.status(200).json({ message: 'Post supprimé !' }))
+        .catch(error => res.status(400).json({ error }));
+
 };
 
