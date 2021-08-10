@@ -38,6 +38,6 @@ const Post = sequelize.define('Post', {
 });
 
 
-// Post.sync({ alter: true });
+Post.sync({ alter: true });
 module.exports = sequelize.model('Post');
 console.log(Post === sequelize.models.Post); // true

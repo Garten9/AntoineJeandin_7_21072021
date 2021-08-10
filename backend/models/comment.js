@@ -54,6 +54,6 @@ const Comment = sequelize.define('Comment', {
 });
 
 
-// Comment.sync({ alter: true });
+Comment.sync({ alter: true });
 module.exports = sequelize.model('Comment');
 console.log(Comment === sequelize.models.Comment); // true
