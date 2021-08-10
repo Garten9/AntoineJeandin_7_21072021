@@ -1,8 +1,11 @@
 <template>
-  <div class="h-100">
+  <div id="page" class="bg-gray">
     <Header />
 
-    <router-view class="bg-gray h-100"></router-view>
+    <router-view class="bg-gray pb-3"></router-view>
+    <footer class="bg-white">
+      <p class="mt-1">Groupomania - 2021</p>
+    </footer>
   </div>
 </template>
 
@@ -20,7 +23,7 @@ export default {
 
 <style lang="scss">
 .bg-gray {
-  background-color: #DADADA;
+  background-color: #dadada;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -41,5 +44,20 @@ export default {
       color: #42b983;
     }
   }
+}
+
+html,
+body, #page, #app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+#page {
+  display: flex;
+  flex-direction: column;
+}
+footer {
+  margin-top: auto;
+  height: 30px;
 }
 </style>

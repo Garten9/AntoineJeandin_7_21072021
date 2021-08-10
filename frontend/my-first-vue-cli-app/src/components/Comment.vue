@@ -1,7 +1,12 @@
 <template>
-  <div class="text-start rounded-3 bg-gray my-2 p-2">
-    <div class="text-primary">{{ pseudoDateComment }}</div>
-    <div>{{ commentData.message }}</div>
+  <div class="text-start rounded-3 bg-gray my-2 p-2 row w-100 mx-auto">
+    <div class="col-auto px-0 pt-1" v-if="user.img_url">
+      <img :src="user.img_url" alt="image de profil user" width="50" />
+    </div>
+    <div class="col">
+      <div class="text-primary">{{ pseudoDateComment }}</div>
+      <div>{{ commentData.message }}</div>
+    </div>
   </div>
 </template>
 
@@ -12,7 +17,7 @@ export default {
   name: "Comment",
   data() {
     return {
-      pseudo: "",
+      user: "",
       userId: sessionStorage.getItem("userId"),
     };
   },
@@ -27,7 +32,7 @@ export default {
       const heure = datePost[1].split(":");
 
       return (
-        this.pseudo +
+        this.user.pseudo +
         " - " +
         date[2] +
         "/" +
@@ -46,7 +51,7 @@ export default {
       .get("http://localhost:3000/api/auth/" + this.commentData.user_id, {
         headers: { Authorization: "Bearer " + sessionStorage.getItem("token") },
       })
-      .then((response) => (this.pseudo = response.data.pseudo))
+      .then((response) => (this.user = response.data))
       .catch(function (error) {
         console.log(error);
         alert("Une erreur est survenue");
@@ -57,7 +62,7 @@ export default {
 
 <style scoped>
 .bg-gray {
-  background-color: #E8E8E8;
+  background-color: #e8e8e8;
 }
 </style>
 

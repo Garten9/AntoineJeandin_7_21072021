@@ -17,6 +17,7 @@
               class="form-control form-control-sm"
               type="file"
               id="formFile"
+              @change="onAddFile"
             />
           </div>
           <div class="my-3 text-end">
@@ -37,8 +38,8 @@
       :key="post.id"
       :postData="post"
       :comments="comments"
+      :getData="getData"
     />
-    <div></div>
   </div>
 </template>
 
@@ -54,26 +55,63 @@ export default {
       comments: [],
       postMessage: "",
       userId: sessionStorage.getItem("userId"),
+      imageArray: null,
     };
   },
   methods: {
-    addPost() {
-      axios({
-        method: "post",
-        url: "http://localhost:3000/api/posts/",
-        data: {
-          message: this.postMessage,
-          userId: this.userId,
-        },
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      })
-        .then(() => window.location.reload())
+    onAddFile(event) {
+      this.imageArray = event.target.files[0];
+    },
+    getData() {
+      axios
+        .get("http://localhost:3000/api/posts/", {
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+          },
+        })
+        .then((response) => (this.posts = response.data))
         .catch(function (error) {
           console.log(error);
           alert("Une erreur est survenue");
         });
+      axios
+        .get("http://localhost:3000/api/comments/", {
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+          },
+        })
+        .then((response) => (this.comments = response.data))
+        .catch(function (error) {
+          console.log(error);
+          alert("Une erreur est survenue");
+        });
+    },
+    addPost() {
+      if (this.postMessage != "" || this.imageArray != null) {
+        var postFormData = new FormData();
+        if (this.imageArray != null) {
+          postFormData.append("image", this.imageArray, this.imageArray.name);
+        }
+        postFormData.append("message", this.postMessage);
+        postFormData.append("userId", this.userId);
+        axios
+          .post("http://localhost:3000/api/posts/", postFormData, {
+            headers: {
+              Authorization: "Bearer " + sessionStorage.getItem("token"),
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then(
+            () => this.getData(),
+            (this.postMessage = ""),
+            (this.imageArray = null),
+            document.getElementById('formFile').value = ""
+          )
+          .catch(function (error) {
+            console.log(error);
+            alert("Une erreur est survenue");
+          });
+      }
     },
   },
   beforeCreate() {
@@ -84,10 +122,7 @@ export default {
     } else {
       this.$store.commit("LOG_IN");
       if (sessionStorage.getItem("moderator") == "true") {
-        console.log("moderation");
         this.$store.commit("MODERATOR_ON");
-      } else {
-        console.log("pas moderation");
       }
     }
   },

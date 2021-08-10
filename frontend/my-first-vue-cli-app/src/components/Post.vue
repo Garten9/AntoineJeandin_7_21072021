@@ -2,14 +2,34 @@
   <div class="post container-fluid">
     <div class="row">
       <div class="col mx-auto mt-3 p-2 rounded-3 bg-white position-relative">
-        <p class="text-primary text-start">{{ pseudoDate }}</p>
+        <div class="row">
+          <div class="col-auto pe-0" v-if="user.img_url">
+            <img :src="user.img_url" alt="image de profil user" width="50" />
+          </div>
+          <p class="text-primary text-start col">
+            {{ user.pseudo }}<br />{{ postDate }}
+          </p>
+        </div>
         <p class="text-start">{{ postData.message }}</p>
+        <img
+          :src="postData.img_url"
+          alt="image du post"
+          v-if="postData.img_url"
+          class="w-100 mb-1"
+        />
         <div
           v-if="postData.user_id == userId || $store.state.moderator == true"
           class="position-absolute m-2"
           style="top: 0px; right: 0px"
         >
-          <img src="../assets/modify.png" alt="icon modify" width="25" v-if="postData.user_id == userId"/>
+          <router-link :to="updatePostUrl"
+            ><img
+              src="../assets/modify.png"
+              alt="icon modify"
+              width="25"
+              v-if="postData.user_id == userId"
+          /></router-link>
+
           <img
             src="../assets/delete.png"
             alt="icon delete"
@@ -42,7 +62,10 @@
         </div>
         <div>
           <div v-for="comment in comments" :key="comment.id">
-            <Comment v-if="comment.post_id == postData.id" :commentData="comment" />
+            <Comment
+              v-if="comment.post_id == postData.id"
+              :commentData="comment"
+            />
           </div>
         </div>
       </div>
@@ -59,7 +82,7 @@ export default {
   name: "Post",
   data() {
     return {
-      pseudo: "",
+      user: "",
       userId: sessionStorage.getItem("userId"),
       commentMessage: "",
     };
@@ -67,16 +90,15 @@ export default {
   props: {
     postData: Object,
     comments: Object,
+    getData: Function,
   },
   computed: {
-    pseudoDate() {
+    postDate() {
       const datePost = this.postData.createdAt.split("T");
       const date = datePost[0].split("-");
       const heure = datePost[1].split(":");
 
       return (
-        this.pseudo +
-        " - " +
         date[2] +
         "/" +
         date[1] +
@@ -88,6 +110,9 @@ export default {
         heure[1]
       );
     },
+    updatePostUrl() {
+      return "/updatePost/" + this.postData.id;
+    },
   },
   methods: {
     deletePost() {
@@ -97,30 +122,32 @@ export default {
             Authorization: "Bearer " + sessionStorage.getItem("token"),
           },
         })
-        .then(() => window.location.reload())
+        .then(() => this.getData())
         .catch(function (error) {
           console.log(error.response);
           alert("Une erreur est survenue");
         });
     },
     addComment() {
-      axios({
-        method: "post",
-        url: "http://localhost:3000/api/comments/",
-        data: {
-          message: this.commentMessage,
-          userId: this.userId,
-          postId: this.postData.id,
-        },
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-      })
-        .then(() => window.location.reload())
-        .catch(function (error) {
-          console.log(error);
-          alert("Une erreur est survenue");
-        });
+      if (this.commentMessage != "") {
+        axios({
+          method: "post",
+          url: "http://localhost:3000/api/comments/",
+          data: {
+            message: this.commentMessage,
+            userId: this.userId,
+            postId: this.postData.id,
+          },
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+          },
+        })
+          .then(() => this.getData(), (this.commentMessage = ""))
+          .catch(function (error) {
+            console.log(error);
+            alert("Une erreur est survenue");
+          });
+      }
     },
   },
   beforeMount() {
@@ -128,7 +155,7 @@ export default {
       .get("http://localhost:3000/api/auth/" + this.postData.user_id, {
         headers: { Authorization: "Bearer " + sessionStorage.getItem("token") },
       })
-      .then((response) => (this.pseudo = response.data.pseudo))
+      .then((response) => (this.user = response.data))
       .catch(function (error) {
         console.log(error);
         alert("Une erreur est survenue");
