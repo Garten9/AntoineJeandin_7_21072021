@@ -38,5 +38,4 @@ const User = sequelize.define('User', {
 // User.sync({ alter: true });
 
 module.exports = sequelize.model('User');
-// `sequelize.define` also returns the model
 console.log(User === sequelize.models.User); // true

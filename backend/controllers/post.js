@@ -1,5 +1,4 @@
 const Post = require('../models/post');
-const User = require('../models/user');
 const fs = require('fs');
 
 const { Sequelize } = require('sequelize');
@@ -42,7 +41,7 @@ exports.createPost = (req, res, next) => {
 
     if (req.file) {
         Post.create({
-            message: req.body.message,
+            message: escapeHtml(req.body.message),
             user_id: req.body.userId,
             img_url: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         })
@@ -50,7 +49,7 @@ exports.createPost = (req, res, next) => {
             .catch(error => res.status(400).json({ error }));
     } else {
         Post.create({
-            message: req.body.message,
+            message: escapeHtml(req.body.message),
             user_id: req.body.userId,
         })
             .then(() => res.status(201).json({ message: "post enregistré" }))
@@ -66,7 +65,7 @@ exports.modifyPost = (req, res, next) => {
                     const filename = post.img_url.split('/images/')[1];
                     fs.unlink(`images/${filename}`, () => {
                         Post.update({
-                            message: req.body.message,
+                            message: escapeHtml(req.body.message),
                             img_url: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
                         }, { where: { id: req.params.id } })
                             .then(() => res.status(200).json({ message: 'post modifié !' }))
@@ -74,7 +73,7 @@ exports.modifyPost = (req, res, next) => {
                     });
                 } else {
                     Post.update({
-                        message: req.body.message,
+                        message: escapeHtml(req.body.message),
                         img_url: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
                     }, { where: { id: req.params.id } })
                         .then(() => res.status(200).json({ message: 'post modifié !' }))
@@ -84,7 +83,7 @@ exports.modifyPost = (req, res, next) => {
             })
             .catch(error => res.status(404).json({ error }));
     } else {
-        Post.update({ message: req.body.message }, { where: { id: req.params.id } })
+        Post.update({ message: escapeHtml(req.body.message) }, { where: { id: req.params.id } })
             .then(() => res.status(200).json({ message: 'post modifié !' }))
             .catch(error => res.status(400).json({ error }));
     }

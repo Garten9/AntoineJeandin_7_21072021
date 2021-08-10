@@ -1,5 +1,4 @@
 const Comment = require('../models/comment');
-// const User = require('../models/user');
 const fs = require('fs');
 
 const { Sequelize } = require('sequelize');
@@ -21,9 +20,6 @@ function escapeHtml(text) {
     return text.replace(/[&<>"']/g, function (m) { return map[m]; });
 }
 
-
-
-
 exports.getAllComments = (req, res, next) => {
     Comment.findAll({
         order: [
@@ -38,7 +34,7 @@ exports.getAllComments = (req, res, next) => {
 exports.createComment = (req, res, next) => {
     console.log(req.body);
     Comment.create({
-        message: req.body.message,
+        message: escapeHtml(req.body.message),
         user_id: req.body.userId,
         post_id: req.body.postId
     })

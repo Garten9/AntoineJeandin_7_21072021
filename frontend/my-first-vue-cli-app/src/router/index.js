@@ -10,42 +10,32 @@ const routes = [
   {
     path: '/signup',
     name: 'Signup',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Signup.vue')
+
+    component: () => import('../views/Signup.vue')
   },
   {
     path: '/accueil',
     name: 'Accueil',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Accueil.vue')
+
+    component: () => import('../views/Accueil.vue')
   },
   {
     path: '/compte',
     name: 'Compte',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Compte.vue')
+
+    component: () => import('../views/Compte.vue')
   },
   {
     path: '/moderator',
     name: 'Moderator',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Moderator.vue')
+
+    component: () => import('../views/Moderator.vue')
   },
   {
     path: '/updatePost/:id',
     name: 'UpdatePost',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/UpdatePost.vue')
+
+    component: () => import('../views/UpdatePost.vue')
   }
 ]
 

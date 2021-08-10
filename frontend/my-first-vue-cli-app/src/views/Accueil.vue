@@ -18,6 +18,7 @@
               type="file"
               id="formFile"
               @change="onAddFile"
+              accept="image/*"
             />
           </div>
           <div class="my-3 text-end">
