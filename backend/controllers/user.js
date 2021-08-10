@@ -1,6 +1,7 @@
 const Utilisateur = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 const { Sequelize } = require('sequelize');
 const sequelize = new Sequelize('groupomania', 'root', 'root', {
     host: 'localhost',
@@ -87,13 +88,54 @@ exports.getOneUser = (req, res, next) => {
 };
 
 exports.deleteUser = (req, res, next) => {
-    Utilisateur.destroy({ where: { id: req.params.id } })
-        .then(() => res.status(200).json({ message: 'user supprimé !' }))
-        .catch(error => res.status(400).json({ error }));
+    Utilisateur.findOne({ where: { id: req.params.id } })
+        .then(user => {
+            if (user.img_url) {
+                const filename = user.img_url.split('/images/')[1];
+                fs.unlink(`images/${filename}`, () => {
+                    Utilisateur.destroy({ where: { id: req.params.id } })
+                        .then(() => res.status(200).json({ message: 'user supprimé !' }))
+                        .catch(error => res.status(400).json({ error }));
+                });
+            } else {
+                Utilisateur.destroy({ where: { id: req.params.id } })
+                    .then(() => res.status(200).json({ message: 'user supprimé !' }))
+                    .catch(error => res.status(400).json({ error }));
+            }
+
+        })
+        .catch(error => res.status(404).json({ error }));
 };
 
 exports.modifyUser = (req, res, next) => {
-    Utilisateur.update({ biography: req.body.biography }, { where: { id: req.params.id } })
-        .then(() => res.status(200).json({ message: 'user modifié !' }))
-        .catch(error => res.status(400).json({ error }));
+    if (req.file) {
+        Utilisateur.findOne({ where: { id: req.params.id } })
+            .then(user => {
+                if (user.img_url) {
+                    const filename = user.img_url.split('/images/')[1];
+                    fs.unlink(`images/${filename}`, () => {
+                        Utilisateur.update({
+                            biography: req.body.biography,
+                            img_url: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+                        }, { where: { id: req.params.id } })
+                            .then(() => res.status(200).json({ message: 'user modifié !' }))
+                            .catch(error => res.status(400).json({ error }));
+                    });
+                } else {
+                    Utilisateur.update({
+                        biography: req.body.biography,
+                        img_url: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+                    }, { where: { id: req.params.id } })
+                        .then(() => res.status(200).json({ message: 'user modifié !' }))
+                        .catch(error => res.status(400).json({ error }));
+                }
+
+            })
+            .catch(error => res.status(404).json({ error }));
+    } else {
+        Utilisateur.update({ biography: req.body.biography }, { where: { id: req.params.id } })
+            .then(() => res.status(200).json({ message: 'user modifié !' }))
+            .catch(error => res.status(400).json({ error }));
+    }
+
 };
