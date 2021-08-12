@@ -1,12 +1,5 @@
 const Comment = require('../models/comment');
-const fs = require('fs');
 
-const { Sequelize } = require('sequelize');
-const sequelize = new Sequelize('groupomania', 'root', 'root', {
-    host: 'localhost',
-    dialect: 'mysql',
-
-});
 
 function escapeHtml(text) {
     var map = {
@@ -32,7 +25,6 @@ exports.getAllComments = (req, res, next) => {
 };
 
 exports.createComment = (req, res, next) => {
-    console.log(req.body);
     Comment.create({
         message: escapeHtml(req.body.message),
         user_id: req.body.userId,
@@ -42,3 +34,12 @@ exports.createComment = (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
 
 };
+
+exports.deleteComment = (req, res, next) => {
+
+    Comment.destroy({ where: { id: req.params.id } })
+    .then(() => res.status(200).json({ message: 'comment supprimé !' }))
+    .catch(error => res.status(400).json({ error }));
+
+};
+

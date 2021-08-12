@@ -1,4 +1,6 @@
-create a local database named "groupomania"
+create a local database
+
+update the .env file with you database config
 
 run "npm install" from both backend and frontend folder
 

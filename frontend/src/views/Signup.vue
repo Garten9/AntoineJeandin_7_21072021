@@ -7,7 +7,7 @@
           alt="groupomania logo"
           src="../assets/logo-above.png"
         />
-        <h1 class="h2 mt-3">Connexion</h1>
+        <h1 class="h2 mt-3">Inscription</h1>
         <form
           method="post"
           class="w-75 needs-validation mx-auto text-start"

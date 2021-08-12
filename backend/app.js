@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const user = require('./models/user');
 const post = require('./models/post');
@@ -6,11 +7,12 @@ const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
 const path = require('path');
-
+const helmet = require('helmet');
 
 
 const app = express();
 
+app.use(helmet());
 
 // definit les headers
 app.use((req, res, next) => {

@@ -64,7 +64,7 @@
           <div v-for="comment in comments" :key="comment.id">
             <Comment
               v-if="comment.post_id == postData.id"
-              :commentData="comment"
+              :commentData="comment" :getData="getData"
             />
           </div>
         </div>

@@ -2,7 +2,7 @@
   <div id="page" class="bg-gray">
     <Header />
 
-    <router-view class="bg-gray pb-3"></router-view>
+    <router-view class="bg-gray pb-3 col-md-8 col-lg-6"></router-view>
     <footer class="bg-white">
       <p class="mt-1">Groupomania - 2021</p>
     </footer>

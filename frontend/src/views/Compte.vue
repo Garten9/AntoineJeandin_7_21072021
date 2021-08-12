@@ -25,13 +25,36 @@
         </ul>
         <button class="btn btn-danger" @click="deleteAccount()">
           Supprimer mon compte
-        </button>
+        </button> <br>
+        <router-link to="/changePassword">
+          <button class="btn btn-primary mt-1">
+            Modifier mon mot de passe
+          </button>
+        </router-link>
       </div>
       <div
         class="mx-auto mt-3 p-2 rounded-3 bg-white position-relative text-start"
       >
         <h2 class="text-primary">Modifiez vos informations</h2>
         <form>
+          <div class="mb-2">
+            <label for="email" class="form-label">Adresse e-mail</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              v-model="email"
+            />
+          </div>
+          <div class="mb-2">
+            <label for="pseudo" class="form-label">Pseudo</label>
+            <input
+              type="text"
+              class="form-control"
+              id="pseudo"
+              v-model="pseudo"
+            />
+          </div>
           <label for="biography" class="form-label"
             >Ajouter une biographie</label
           >
@@ -79,6 +102,8 @@ export default {
   data() {
     return {
       biography: "",
+      pseudo: "",
+      email: "",
       user: [],
       userId: sessionStorage.getItem("userId"),
       imageArray: null,
@@ -107,6 +132,8 @@ export default {
         userFormData.append("image", this.imageArray, this.imageArray.name);
       }
       userFormData.append("biography", this.biography);
+      userFormData.append("email", this.email);
+      userFormData.append("pseudo", this.pseudo);
       axios
         .put("http://localhost:3000/api/auth/" + this.userId, userFormData, {
           headers: {
@@ -114,7 +141,7 @@ export default {
             "Content-Type": "multipart/form-data",
           },
         })
-        .then(() => this.getUser())
+        .then(() => this.getUser(), alert('Informations modifiées'))
         .catch(function (error) {
           console.log(error);
           alert("Une erreur est survenue");
@@ -130,7 +157,9 @@ export default {
         .then(
           (response) => (
             (this.user = response.data),
-            (this.biography = response.data.biography)
+            (this.biography = response.data.biography),
+            (this.email = response.data.email),
+            (this.pseudo = response.data.pseudo)
           )
         )
         .catch(function (error) {
@@ -152,7 +181,14 @@ export default {
       .get("http://localhost:3000/api/auth/" + this.userId, {
         headers: { Authorization: "Bearer " + sessionStorage.getItem("token") },
       })
-      .then((response) => (this.user = response.data, this.biography = response.data.biography))
+      .then(
+        (response) => (
+          (this.user = response.data),
+          (this.biography = response.data.biography),
+          (this.email = response.data.email),
+          (this.pseudo = response.data.pseudo)
+        )
+      )
       .catch(function (error) {
         console.log(error);
         alert("Une erreur est survenue");

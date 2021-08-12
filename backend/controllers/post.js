@@ -1,11 +1,6 @@
 const Post = require('../models/post');
 const fs = require('fs');
 
-const { Sequelize } = require('sequelize');
-const sequelize = new Sequelize('groupomania', 'root', 'root', {
-    host: 'localhost',
-    dialect: 'mysql'
-});
 
 function escapeHtml(text) {
     var map = {
